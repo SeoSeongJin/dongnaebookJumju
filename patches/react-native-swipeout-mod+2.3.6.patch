@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-swipeout-mod/dist/index.js b/node_modules/react-native-swipeout-mod/dist/index.js
+index a1b4d7f..04ef065 100644
+--- a/node_modules/react-native-swipeout-mod/dist/index.js
++++ b/node_modules/react-native-swipeout-mod/dist/index.js
+@@ -30,7 +30,7 @@ var _createReactClass = require('create-react-class');
+ 
+ var _createReactClass2 = _interopRequireDefault(_createReactClass);
+ 
+-var _reactNative = require('react-native');
++var _reactNative = require('deprecated-react-native-prop-types');
+ 
+ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+ 

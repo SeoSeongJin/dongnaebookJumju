@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "130779065918",
+    "project_id": "dongnaebook-5e8fd",
+    "storage_bucket": "dongnaebook-5e8fd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:130779065918:android:ad01fbbb5cc76ba628ab6f",
+        "android_client_info": {
+          "package_name": "com.dmonster.dongnaebookowner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "130779065918-snbokqu2cpr76tddbdekb03mg8h9447n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuWksCVqbNGYwh00LysdoallN2oZDgfFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "130779065918-snbokqu2cpr76tddbdekb03mg8h9447n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

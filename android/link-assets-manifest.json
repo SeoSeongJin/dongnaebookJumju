@@ -1,0 +1,37 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/NotoSansCJKkr-Bold.ttf",
+      "sha1": "5d0376c4fdee26ca9ce4bffefedad646df5ef826"
+    },
+    {
+      "path": "src/assets/fonts/NotoSansCJKkr-Medium.ttf",
+      "sha1": "28542533f9e0935f303f1981dbe0c993d013a666"
+    },
+    {
+      "path": "src/assets/fonts/NotoSansCJKkr-Regular.ttf",
+      "sha1": "35420ae3c59490963488aa6d8380d5f18c5d4e79"
+    },
+    {
+      "path": "src/assets/fonts/Quantico-Bold.ttf",
+      "sha1": "1946d4d7bce32e7779a1e0b8cfe5b0bf15abda2b"
+    },
+    {
+      "path": "src/assets/fonts/Quantico-BoldItalic.ttf",
+      "sha1": "a8758b8301605d43547d29b00fd76f09edee171c"
+    },
+    {
+      "path": "src/assets/fonts/Quantico-Italic.ttf",
+      "sha1": "469791d88569e865c72d98d88d88c8ee9dd45867"
+    },
+    {
+      "path": "src/assets/fonts/Quantico-Regular.ttf",
+      "sha1": "8e3ddbe4ed600c60d126907bb391fdcd67dd0263"
+    },
+    {
+      "path": "src/assets/fonts/SquadaOne-Regular.ttf",
+      "sha1": "6033f8c50be329002978b6307b5fa7f177830540"
+    }
+  ]
+}
