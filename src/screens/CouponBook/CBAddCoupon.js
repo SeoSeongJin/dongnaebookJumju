@@ -9,20 +9,22 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {Shadow} from 'react-native-shadow-2';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
-import {add, format} from "date-fns";
-import {ko} from "date-fns/locale";
+import {add, format} from 'date-fns';
+import {ko} from 'date-fns/locale';
 import Api from '../../Api';
 import {useSelector} from 'react-redux';
 import {useEffect} from 'react';
 import cusToast from '../../components/CusToast';
+import {useTrack} from '@hackler/react-native-sdk';
 
 const CBAddCoupon = ({navigation, route}) => {
+  const track = useTrack();
   const userState = useSelector(state => state.login);
   const isEdit = route.params?.isEdit;
   console.log('userState', userState);
 
-  const today = format(new Date(), "yyyy-MM-dd");
-  const newDateFnsDate = format(add(new Date(),{days:360}),"yyyy-MM-dd");
+  const today = format(new Date(), 'yyyy-MM-dd');
+  const newDateFnsDate = format(add(new Date(), {days: 360}), 'yyyy-MM-dd');
 
   const [form, setForm] = useState({
     jumju_id: userState.mt_id,
@@ -79,9 +81,7 @@ const CBAddCoupon = ({navigation, route}) => {
       return Alert.alert('알림', '모든 정보를 입력해주세요.');
     }
 
-    if (
-      form.cp_coupon_number < 1
-    ) {
+    if (form.cp_coupon_number < 1) {
       return Alert.alert('알림', '발행 건수는 1이상 입력해주세요');
     }
 
@@ -94,6 +94,14 @@ const CBAddCoupon = ({navigation, route}) => {
       data = {...form};
     }
 
+    //hackle event
+    const event = {
+      key: 'complete_add_coupon',
+      properties: {
+        title: form.cp_subject,
+      },
+    };
+
     console.log('data', data);
     if (!isEdit) {
       Api.send('lifestyle_coupon_input', data, args => {
@@ -101,6 +109,7 @@ const CBAddCoupon = ({navigation, route}) => {
         const arrItems = args.arrItems;
         console.log('args', args);
         if (resultItem.result === 'Y') {
+          track(event);
           navigation.navigate('Main');
         } else {
           Alert.alert('쿠폰추가', resultItem.message);
@@ -252,8 +261,7 @@ const CBAddCoupon = ({navigation, route}) => {
               borderColor: '#E3E3E3',
               paddingHorizontal: 10,
               justifyContent: 'center',
-            }}
-          >
+            }}>
             <Text style={{color: form?.cp_start ? undefined : undefined}}>
               {form?.cp_start ? form?.cp_start : today}
             </Text>
@@ -271,13 +279,14 @@ const CBAddCoupon = ({navigation, route}) => {
               borderColor: '#E3E3E3',
               paddingHorizontal: 10,
               justifyContent: 'center',
-            }}
-          >
+            }}>
             <Text style={{color: form?.cp_end ? undefined : undefined}}>
               {form?.cp_end ? form?.cp_end : newDateFnsDate}
             </Text>
           </Pressable>
-          <Text style={{fontFamily: Fonts.NotoSansB}}>쿠폰함에서 쿠폰 유지기간</Text>
+          <Text style={{fontFamily: Fonts.NotoSansB}}>
+            쿠폰함에서 쿠폰 유지기간
+          </Text>
           <TextInput
             autoCapitalize="none"
             onChangeText={str =>
@@ -315,16 +324,14 @@ const CBAddCoupon = ({navigation, route}) => {
                   },
                 ]);
               }}
-              style={{alignSelf: 'flex-end', marginTop: 10}}
-            >
+              style={{alignSelf: 'flex-end', marginTop: 10}}>
               <Text
                 style={{
                   fontSize: 13,
                   borderBottomWidth: 1,
                   color: '#C7C7CD',
                   borderColor: '#C7C7CD',
-                }}
-              >
+                }}>
                 쿠폰 삭제
               </Text>
             </Pressable>
@@ -337,8 +344,7 @@ const CBAddCoupon = ({navigation, route}) => {
               marginBottom: 40,
             }}
             distance={4}
-            offset={[0, 2]}
-          >
+            offset={[0, 2]}>
             <Pressable
               onPress={() => {
                 _onPress();
@@ -349,15 +355,13 @@ const CBAddCoupon = ({navigation, route}) => {
                 height: 60,
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontFamily: Fonts.NotoSansM,
                   color: 'white',
                   fontSize: 17,
-                }}
-              >
+                }}>
                 {isEdit ? '쿠폰 수정' : '쿠폰 추가'}
               </Text>
             </Pressable>

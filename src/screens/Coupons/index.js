@@ -347,7 +347,7 @@ const Coupon = props => {
                   ...BaseStyle.font_white,
                   marginTop: Platform.OS === 'ios' ? -2 : 0,
                 }}>
-                쿠폰 추가하기 +
+                쿠폰 추가하기
               </Text>
             </TouchableOpacity>
           </View>

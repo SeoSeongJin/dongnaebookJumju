@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TextInput, Linking } from "react-native";
+import {View, Text, Pressable, TextInput, Linking} from 'react-native';
 import React from 'react';
 import CBTicket from '../components/CBTicket';
 import {PrimaryColor} from '../../../styles/Base';
@@ -10,12 +10,14 @@ import {useSelector} from 'react-redux';
 import {useState} from 'react';
 import {useEffect} from 'react';
 import {useIsFocused} from '@react-navigation/native';
+import {useTrack} from '@hackler/react-native-sdk';
 
 const CBMainTabFirst = ({navigation}) => {
+  const track = useTrack();
   const [cpList, setCpList] = useState([]);
   const userInfo = useSelector(state => state.login);
   const isFocused = useIsFocused();
-  const [config, setConfig] = React.useState('')
+  const [config, setConfig] = React.useState('');
 
   const renderItem = item => {
     return <CBTicket element={item.item} navigation={navigation} />;
@@ -70,14 +72,14 @@ const CBMainTabFirst = ({navigation}) => {
 
   //광고문의 외부 URL
   const _configInfo = () => {
-    const data = {}
-    Api.send('site_config', data,args => {
+    const data = {};
+    Api.send('site_config', data, args => {
       const resultItem = args.resultItem;
       const arrItems = args.arrItems;
       if (resultItem.result === 'Y') {
         setConfig(arrItems);
       }
-    })
+    });
   };
 
   useEffect(() => {
@@ -87,10 +89,11 @@ const CBMainTabFirst = ({navigation}) => {
   return (
     <View style={{flex: 1, backgroundColor: 'white', paddingTop: 20}}>
       <View style={{flexDirection: 'row', marginHorizontal: 14, height: 70}}>
-        <View style={{
-          flex: 0.7,
-          marginRight: 5,
-        }}>
+        <View
+          style={{
+            flex: 0.7,
+            marginRight: 5,
+          }}>
           <Shadow
             style={{width: '100%', borderRadius: 10, overflow: 'hidden'}}
             containerStyle={{
@@ -99,28 +102,38 @@ const CBMainTabFirst = ({navigation}) => {
             }}
             distance={4}
             offset={[0, 2]}>
-          <Pressable
-            onPress={() => {
-              navigation.navigate('CBAddCoupon');
-            }}
-            style={{
-              backgroundColor: PrimaryColor,
-              height: 55,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{fontFamily: Fonts.NotoSansM, color: 'white', lineHeight:22, fontSize: 16}}>
-              쿠폰 추가하기 +
-            </Text>
-          </Pressable>
+            <Pressable
+              onPress={() => {
+                const event = {
+                  key: 'click_add_coupon',
+                };
+                track(event);
+                navigation.navigate('CBAddCoupon');
+              }}
+              style={{
+                backgroundColor: PrimaryColor,
+                height: 55,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.NotoSansM,
+                  color: 'white',
+                  lineHeight: 22,
+                  fontSize: 16,
+                }}>
+                쿠폰 추가하기 +
+              </Text>
+            </Pressable>
           </Shadow>
         </View>
 
-        <View style={{
-          flex: 0.3,
-          marginleft: 5,
-        }}>
+        <View
+          style={{
+            flex: 0.3,
+            marginleft: 5,
+          }}>
           <Shadow
             style={{width: '100%', borderRadius: 10, overflow: 'hidden'}}
             containerStyle={{
@@ -129,26 +142,33 @@ const CBMainTabFirst = ({navigation}) => {
             }}
             distance={4}
             offset={[0, 2]}>
-          <Pressable
-            onPress={() => {
+            <Pressable
+              onPress={() => {
+                const event = {
+                  key: 'click_ad',
+                };
+                track(event);
                 Linking.openURL(config.cf_link1);
-            }}
-            style={{
-              backgroundColor: PrimaryColor,
-              height: 55,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{fontFamily: Fonts.NotoSansM, color: 'white', lineHeight:22, fontSize: 16}}>
-              광고문의 +
-            </Text>
-          </Pressable>
+              }}
+              style={{
+                backgroundColor: PrimaryColor,
+                height: 55,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.NotoSansM,
+                  color: 'white',
+                  lineHeight: 22,
+                  fontSize: 16,
+                }}>
+                광고문의 +
+              </Text>
+            </Pressable>
           </Shadow>
         </View>
-
       </View>
-
 
       <FlatList
         data={cpList}
@@ -159,7 +179,6 @@ const CBMainTabFirst = ({navigation}) => {
           _getCBListMore('N');
         }}
       />
-
     </View>
   );
 };

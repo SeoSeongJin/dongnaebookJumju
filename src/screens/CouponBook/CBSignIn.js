@@ -10,8 +10,10 @@ import axios from 'axios';
 import Api from '../../Api';
 import {useSelector} from 'react-redux';
 import cusToast from '../../components/CusToast';
+import {useTrack} from '@hackler/react-native-sdk';
 
 const CBSignIn = ({navigation, route}) => {
+  const track = useTrack();
   const [idChecked, setIdChecked] = React.useState(false); // 아이디 중복 체크
 
   const [form, setForm] = useState({
@@ -34,11 +36,11 @@ const CBSignIn = ({navigation, route}) => {
       return Alert.alert('회원가입', '아이디를 입력해주세요');
     }
 
-    if( blank_pattern.test(form.id) == true ){
+    if (blank_pattern.test(form.id) == true) {
       return Alert.alert('회원가입', '회원 아이디에 공백이 입력되었습니다.');
     }
 
-    if( regExpHan.test(form.id) == true ){
+    if (regExpHan.test(form.id) == true) {
       return Alert.alert('회원가입', '회원 아이디에 한글이 입력되었습니다.');
     }
 
@@ -59,30 +61,29 @@ const CBSignIn = ({navigation, route}) => {
         Alert.alert('회원가입', resultItem.message);
       }
     });
-
   };
 
   const _onPress = async () => {
     const blank_pattern = /[\s]/g;
     const regExpHan = /[ㄱ-ㅎㅏ-ㅣ가-힣]/g;
 
-    if( idChecked == false ){
+    if (idChecked == false) {
       return Alert.alert('회원가입', '아이디 중복확인을 해주세요.');
     }
 
-    if( blank_pattern.test(form.name) == true ){
+    if (blank_pattern.test(form.name) == true) {
       return Alert.alert('회원가입', '회원 이름에 공백이 입력되었습니다.');
     }
 
-    if( blank_pattern.test(form.id) == true ){
+    if (blank_pattern.test(form.id) == true) {
       return Alert.alert('회원가입', '회원 아이디에 공백이 입력되었습니다.');
     }
 
-    if( regExpHan.test(form.id) == true ){
+    if (regExpHan.test(form.id) == true) {
       return Alert.alert('회원가입', '회원 아이디에 한글이 입력되었습니다.');
     }
 
-    if( blank_pattern.test(form.pw) == true ){
+    if (blank_pattern.test(form.pw) == true) {
       return Alert.alert('회원가입', '비빌번호에 공백이 입력되었습니다.');
     }
 
@@ -94,7 +95,11 @@ const CBSignIn = ({navigation, route}) => {
       return Alert.alert('회원가입', '비밀번호를 확인해주세요');
     }
 
-
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = ('0' + (today.getMonth() + 1)).slice(-2);
+    var day = ('0' + today.getDate()).slice(-2);
+    var dateString = year + '-' + month + '-' + day;
 
     const params = {
       mt_id: form.id,
@@ -106,11 +111,23 @@ const CBSignIn = ({navigation, route}) => {
       mt_app_token: mtAppToken,
       mt_visit_device: Platform.OS,
     };
+
+    const event = {
+      key: 'sign_up',
+      properties: {
+        id: form.id,
+        date: dateString,
+        name: form.name,
+        number: form.hp,
+      },
+    };
+    console.log('hackle event =====>', event);
     Api.send('jumju_join', params, args => {
       const resultItem = args.resultItem;
       const arrItems = args.arrItems;
       console.log('args', args);
       if (resultItem.result === 'Y') {
+        track(event);
         cusToast('회원가입이 완료되었습니다. 메인화면으로 이동합니다.', 1500);
         navigation.navigate('Login');
       } else {
@@ -129,8 +146,8 @@ const CBSignIn = ({navigation, route}) => {
   }, [route.params]);
 
   const validateText = val => {
-    return val.replace(/[`!@#$%^*():|?<>\{\}\[\]\\\/]/gi, '')
-  }
+    return val.replace(/[`!@#$%^*():|?<>\{\}\[\]\\\/]/gi, '');
+  };
 
   return (
     <SafeAreaView style={{...Base.safeArea}}>
@@ -151,7 +168,9 @@ const CBSignIn = ({navigation, route}) => {
               paddingHorizontal: 10,
             }}
           />
-          <Text style={{fontFamily: Fonts.NotoSansB, paddingTop: 8}}>아이디</Text>
+          <Text style={{fontFamily: Fonts.NotoSansB, paddingTop: 8}}>
+            아이디
+          </Text>
           <View style={{flexDirection: 'row', marginVertical: 8}}>
             <TextInput
               autoCapitalize="none"
@@ -190,9 +209,10 @@ const CBSignIn = ({navigation, route}) => {
                 중복 확인
               </Text>
             </Pressable>
-
           </View>
-          <Text style={{fontFamily: Fonts.NotoSansB, paddingTop: 8}}>비밀번호</Text>
+          <Text style={{fontFamily: Fonts.NotoSansB, paddingTop: 8}}>
+            비밀번호
+          </Text>
           <TextInput
             autoCapitalize="none"
             onChangeText={str => setForm(prev => ({...prev, pw: str}))}
@@ -207,7 +227,9 @@ const CBSignIn = ({navigation, route}) => {
             }}
           />
 
-          <Text style={{fontFamily: Fonts.NotoSansB, paddingTop: 8}}>비밀번호 재입력</Text>
+          <Text style={{fontFamily: Fonts.NotoSansB, paddingTop: 8}}>
+            비밀번호 재입력
+          </Text>
           <TextInput
             autoCapitalize="none"
             onChangeText={str => setForm(prev => ({...prev, pw_re: str}))}
@@ -222,7 +244,9 @@ const CBSignIn = ({navigation, route}) => {
             }}
           />
 
-          <Text style={{fontFamily: Fonts.NotoSansB, paddingTop: 8}}>핸드폰번호</Text>
+          <Text style={{fontFamily: Fonts.NotoSansB, paddingTop: 8}}>
+            핸드폰번호
+          </Text>
           <View style={{flexDirection: 'row', marginVertical: 8}}>
             <TextInput
               autoCapitalize="none"
@@ -265,7 +289,9 @@ const CBSignIn = ({navigation, route}) => {
             </Pressable>
           </View>
 
-          <Text style={{fontFamily: Fonts.NotoSansB, paddingTop: 8}}>추천인코드</Text>
+          <Text style={{fontFamily: Fonts.NotoSansB, paddingTop: 8}}>
+            추천인코드
+          </Text>
           <TextInput
             autoCapitalize="none"
             onChangeText={str => setForm(prev => ({...prev, recommender: str}))}

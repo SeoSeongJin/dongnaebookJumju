@@ -7,6 +7,7 @@ import messaging from '@react-native-firebase/messaging';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import {Provider} from 'react-redux';
 import initStore from './src/redux/store';
+import {createInstance, HackleProvider} from '@hackler/react-native-sdk';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -42,11 +43,17 @@ registerAppWithFCM();
 requestUserPermission();
 
 const store = initStore();
+const config = {
+  debug: true,
+};
+const hackleClient = createInstance('n2wEeLUKfPAOW0Ph56f5LfFYHxQB1vac', config);
 
 const RNRedux = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
+  <HackleProvider hackleClient={hackleClient}>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </HackleProvider>
 );
 
 AppRegistry.registerComponent(appName, () => RNRedux);

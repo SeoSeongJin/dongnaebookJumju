@@ -4,8 +4,10 @@ import {PrimaryColor} from '../../../styles/Base';
 import colors from '../../../styles/colors';
 import {Shadow} from 'react-native-shadow-2';
 import {Fonts} from '../../../styles/Fonts';
+import {useTrack} from '@hackler/react-native-sdk';
 
 const CBTicket = ({element, elementIdx, navigation}) => {
+  const track = useTrack();
   return (
     <Shadow
       distance={5}
@@ -45,7 +47,7 @@ const CBTicket = ({element, elementIdx, navigation}) => {
         <View
           style={{
             flex: 1,
-            marginTop:3,
+            marginTop: 3,
             marginLeft: 3,
             justifyContent: 'space-between',
           }}>
@@ -64,7 +66,7 @@ const CBTicket = ({element, elementIdx, navigation}) => {
                 fontFamily: Fonts.NotoSansR,
                 color: colors.fontColorA,
                 fontSize: 11,
-                lineHeight:12,
+                lineHeight: 12,
                 marginRight: 8,
               }}>
               {element?.cp_end_txt}
@@ -73,7 +75,7 @@ const CBTicket = ({element, elementIdx, navigation}) => {
           <Text
             style={{
               fontSize: 16,
-              lineHeight:20,
+              lineHeight: 20,
               color: colors.fontColor2,
               fontFamily: Fonts.NotoSansB,
             }}
@@ -85,7 +87,7 @@ const CBTicket = ({element, elementIdx, navigation}) => {
               style={{
                 flex: 1,
                 fontSize: 13,
-                lineHeight:16,
+                lineHeight: 16,
                 color: colors.fontColorA2,
                 fontFamily: Fonts.NotoSansB,
               }}
@@ -98,7 +100,7 @@ const CBTicket = ({element, elementIdx, navigation}) => {
                 color: PrimaryColor,
                 fontFamily: Fonts.NotoSansB,
                 marginRight: 8,
-                lineHeight:12,
+                lineHeight: 12,
               }}
               numberOfLines={2}>
               남은 쿠폰: {element?.cp_coupon_remaining}
@@ -116,6 +118,10 @@ const CBTicket = ({element, elementIdx, navigation}) => {
         />
         <Pressable
           onPress={() => {
+            const event = {
+              key: 'click_coupon_edit',
+            };
+            track(event);
             navigation.navigate('CBAddCoupon', {
               isEdit: true,
               editEle: element,

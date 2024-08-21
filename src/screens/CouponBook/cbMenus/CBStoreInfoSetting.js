@@ -34,10 +34,12 @@ import {useEffect} from 'react';
 import {template} from '@babel/core';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useTrack} from '@hackler/react-native-sdk';
 
 const MAIN_IMAGE_THUMB_WIDTH = (Dimensions.get('window').width - 40) / 5 - 4;
 
 const CBStoreInfoSetting = props => {
+  const track = useTrack();
   const {navigation} = props;
   const userState = useSelector(state => state.login);
   console.log('userState', userState);
@@ -106,7 +108,7 @@ const CBStoreInfoSetting = props => {
   const [tel, setTel] = useState({one: '', two: '', thr: ''});
   // const [fax, setFax] = useState({one: '', two: '', thr: ''});
 
-  const [disable, setDisable ] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   // 연관 키워드
   const [keyword, setKeyword] = useState({
@@ -243,7 +245,15 @@ const CBStoreInfoSetting = props => {
       mb_icon_del: storeLogoChange ? 1 : 0,
     };
     console.log('data', data);
+    console.log('info.mb_company', info.mb_company);
     // return;
+    const event = {
+      key: 'complete_add_place',
+      properties: {
+        title: info.mb_company,
+      },
+    };
+
     const params2 = {
       rt_img1: fileImgs01 !== null ? fileImgs01 : '',
       rt_img2: fileImgs02 !== null ? fileImgs02 : '',
@@ -263,6 +273,7 @@ const CBStoreInfoSetting = props => {
       console.log('res::', resultItem);
       console.log('res arrItems::', arrItems);
       if (resultItem.result === 'Y') {
+        track(event);
         cusToast('매장정보를 등록하였습니다.메인화면으로 이동합니다.', 1500);
         setTimeout(() => {
           navigation.navigate('Home', {screen: 'Main'});
@@ -419,12 +430,10 @@ const CBStoreInfoSetting = props => {
 
   // 대표이미지 업로드 선택시 이미지 설정 or 카메라 선택 모달
   const [currentIndex, setCurrentIndex] = React.useState(0);
-  const [mediaChoiceModalVisible, setMediaChoiceModalVisible] = React.useState(
-    false,
-  );
-  const [currentImageUploadType, setCurrentImageUploadType] = React.useState(
-    '',
-  );
+  const [mediaChoiceModalVisible, setMediaChoiceModalVisible] =
+    React.useState(false);
+  const [currentImageUploadType, setCurrentImageUploadType] =
+    React.useState('');
 
   /**
    * 갤러리 선택 또는 카메라 촬영 핸들러 - 로고('logo') or 대표이미지('main') type 및 index 등 설정
@@ -546,7 +555,7 @@ const CBStoreInfoSetting = props => {
             six: temp[5] ? temp[5] : '',
           });
         }
-        setDisable(arrItems.mb_recommender? false : true);
+        setDisable(arrItems.mb_recommender ? false : true);
         setInfo({
           mb_ca_code: '',
           mb_company: arrItems.mb_company,
@@ -602,8 +611,7 @@ const CBStoreInfoSetting = props => {
           // console.log('temp :::: ', temp);
           // console.log(sltdCate.includes(ele));
         }}
-        style={{flex: 1, flexDirection: 'row'}}
-      >
+        style={{flex: 1, flexDirection: 'row'}}>
         <Image
           source={
             sltdCate.find(item => item.ca_code === ele.ca_code)
@@ -652,8 +660,7 @@ const CBStoreInfoSetting = props => {
             alignItems: 'center',
             backgroundColor: '#222',
             borderRadius: 30,
-          }}
-        >
+          }}>
           <Image
             source={require('../../../images/close_wh.png')}
             style={{
@@ -684,15 +691,13 @@ const CBStoreInfoSetting = props => {
           backgroundColor: '#ececec',
           justifyContent: 'center',
           alignItems: 'center',
-        }}
-      >
+        }}>
         <Text
           style={{
             ...BaseStyle.ko24,
             color: '#aaa',
             marginTop: Platform.OS === 'ios' ? -5 : 0,
-          }}
-        >
+          }}>
           +
         </Text>
       </TouchableOpacity>
@@ -723,8 +728,7 @@ const CBStoreInfoSetting = props => {
             onBackdropPress={imageOrCameraChoiceCloseHandler}
             style={{...BaseStyle.ph10, ...BaseStyle.pv20}}
             animationIn="slideInUp"
-            animationInTiming={100}
-          >
+            animationInTiming={100}>
             <View
               style={{
                 ...BaseStyle.container2,
@@ -733,8 +737,7 @@ const CBStoreInfoSetting = props => {
                 position: 'relative',
                 backgroundColor: '#fff',
                 borderRadius: 5,
-              }}
-            >
+              }}>
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={imageOrCameraChoiceCloseHandler}
@@ -748,8 +751,7 @@ const CBStoreInfoSetting = props => {
                   height: 30,
                   justifyContent: 'center',
                   alignItems: 'center',
-                }}
-              >
+                }}>
                 <Image
                   source={require('../../../images/close.png')}
                   style={{
@@ -765,8 +767,7 @@ const CBStoreInfoSetting = props => {
               <View
                 style={{
                   ...BaseStyle.container4,
-                }}
-              >
+                }}>
                 <TouchableOpacity
                   activeOpacity={1}
                   onPress={openPickerHandler}
@@ -776,8 +777,7 @@ const CBStoreInfoSetting = props => {
                     backgroundColor: Primary.PointColor01,
                     borderTopLeftRadius: 5,
                     borderBottomLeftRadius: 5,
-                  }}
-                >
+                  }}>
                   <Text style={{...BaseStyle.ko1, ...BaseStyle.font_white}}>
                     갤러리선택
                   </Text>
@@ -791,14 +791,12 @@ const CBStoreInfoSetting = props => {
                     backgroundColor: Primary.PointColor02,
                     borderTopRightRadius: 5,
                     borderBottomRightRadius: 5,
-                  }}
-                >
+                  }}>
                   <Text
                     style={{
                       ...BaseStyle.ko14,
                       color: '#fff',
-                    }}
-                  >
+                    }}>
                     사진촬영
                   </Text>
                 </TouchableOpacity>
@@ -813,10 +811,9 @@ const CBStoreInfoSetting = props => {
                   style={{
                     ...BaseStyle.ko12,
                     color: Primary.PointColor02,
-                    lineHeight:16,
+                    lineHeight: 16,
                     ...BaseStyle.mb20,
-                  }}
-                >
+                  }}>
                   ※ 표시는 필수 입력란 입니다.
                 </Text>
 
@@ -827,8 +824,7 @@ const CBStoreInfoSetting = props => {
                       ...BaseStyle.ko15,
                       ...BaseStyle.font_bold,
                       ...BaseStyle.mr10,
-                    }}
-                  >
+                    }}>
                     로고 설정
                   </Text>
                   {/* <Text
@@ -848,8 +844,7 @@ const CBStoreInfoSetting = props => {
                     flexWrap: 'wrap',
                     ...BaseStyle.mv10,
                     ...BaseStyle.mb20,
-                  }}
-                >
+                  }}>
                   {storeLogo !== '' && (
                     <>
                       <Image
@@ -877,8 +872,7 @@ const CBStoreInfoSetting = props => {
                           alignItems: 'center',
                           backgroundColor: '#222',
                           borderRadius: 30,
-                        }}
-                      >
+                        }}>
                         <Image
                           source={require('../../../images/close_wh.png')}
                           style={{
@@ -905,15 +899,13 @@ const CBStoreInfoSetting = props => {
                         backgroundColor: '#ececec',
                         justifyContent: 'center',
                         alignItems: 'center',
-                      }}
-                    >
+                      }}>
                       <Text
                         style={{
                           ...BaseStyle.ko24,
                           color: '#aaa',
                           marginTop: Platform.OS === 'ios' ? -5 : 0,
-                        }}
-                      >
+                        }}>
                         +
                       </Text>
                     </TouchableOpacity>
@@ -929,8 +921,7 @@ const CBStoreInfoSetting = props => {
                       ...BaseStyle.ko15,
                       ...BaseStyle.font_bold,
                       ...BaseStyle.mr10,
-                    }}
-                  >
+                    }}>
                     대표 이미지
                   </Text>
                   <View>
@@ -938,13 +929,17 @@ const CBStoreInfoSetting = props => {
                       style={{
                         ...BaseStyle.ko12,
                         color: '#aaa',
-                        lineHeight:16,
+                        lineHeight: 16,
                         ...BaseStyle.mb3,
-                      }}
-                    >
+                      }}>
                       (대표 이미지는 5장까지 등록 가능합니다.)
                     </Text>
-                    <Text style={{...BaseStyle.ko12, lineHeight:16, color: '#aaa'}}>
+                    <Text
+                      style={{
+                        ...BaseStyle.ko12,
+                        lineHeight: 16,
+                        color: '#aaa',
+                      }}>
                       ※ 이미지는 4:3 비율을 권장합니다.
                     </Text>
                   </View>
@@ -957,8 +952,7 @@ const CBStoreInfoSetting = props => {
                     alignItems: 'center',
                     flexWrap: 'wrap',
                     ...BaseStyle.mv10,
-                  }}
-                >
+                  }}>
                   {/* 신규 */}
                   {detailImgs01 !== '' ? (
                     <UploadedImageBox imgPath={detailImgs01} index={1} />
@@ -1001,13 +995,11 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       매장명
                     </Text>
                     <Text
-                      style={{...BaseStyle.ko12, color: Primary.PointColor02}}
-                    >
+                      style={{...BaseStyle.ko12, color: Primary.PointColor02}}>
                       ※
                     </Text>
                   </View>
@@ -1018,8 +1010,7 @@ const CBStoreInfoSetting = props => {
                       ...BaseStyle.round05,
                       ...BaseStyle.ph10,
                       height: 50,
-                    }}
-                  >
+                    }}>
                     <TextInput
                       placeholder="매장명을 입력해주세요."
                       value={info.mb_company}
@@ -1045,13 +1036,11 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       매장 소개
                     </Text>
                     <Text
-                      style={{...BaseStyle.ko12, color: Primary.PointColor02}}
-                    >
+                      style={{...BaseStyle.ko12, color: Primary.PointColor02}}>
                       ※
                     </Text>
                   </View>
@@ -1062,8 +1051,7 @@ const CBStoreInfoSetting = props => {
                       ...BaseStyle.round05,
                       ...BaseStyle.ph10,
                       height: 150,
-                    }}
-                  >
+                    }}>
                     <TextInput
                       // ref={introduceRef}
                       value={info.mb_memo}
@@ -1092,13 +1080,11 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       매장 전화번호
                     </Text>
                     <Text
-                      style={{...BaseStyle.ko12, color: Primary.PointColor02}}
-                    >
+                      style={{...BaseStyle.ko12, color: Primary.PointColor02}}>
                       ※
                     </Text>
                   </View>
@@ -1162,8 +1148,7 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       홈페이지
                     </Text>
                     {/* <Text
@@ -1178,8 +1163,7 @@ const CBStoreInfoSetting = props => {
                       ...BaseStyle.round05,
                       ...BaseStyle.ph10,
                       height: 50,
-                    }}
-                  >
+                    }}>
                     <TextInput
                       placeholder="홈페이지를 입력해주세요."
                       value={info?.mb_homepage}
@@ -1275,13 +1259,11 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       매장 주소
                     </Text>
                     <Text
-                      style={{...BaseStyle.ko12, color: Primary.PointColor02}}
-                    >
+                      style={{...BaseStyle.ko12, color: Primary.PointColor02}}>
                       ※
                     </Text>
                   </View>
@@ -1294,12 +1276,10 @@ const CBStoreInfoSetting = props => {
                       paddingHorizontal: 10,
                       height: 50,
                       justifyContent: 'center',
-                    }}
-                  >
+                    }}>
                     <Pressable
                       onPress={() => setModalPost(true)}
-                      style={{justifyContent: 'center'}}
-                    >
+                      style={{justifyContent: 'center'}}>
                       <Text style={{color: '#c7c7c7'}}>
                         {info.mb_addr1
                           ? info.mb_addr1
@@ -1315,8 +1295,7 @@ const CBStoreInfoSetting = props => {
                       ...BaseStyle.ph10,
                       height: 50,
                       marginTop: 10,
-                    }}
-                  >
+                    }}>
                     <TextInput
                       placeholder="상세주소를 입력해주세요."
                       value={info.mb_addr2}
@@ -1342,8 +1321,7 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       사업자등록번호
                     </Text>
                     {/* <Text
@@ -1413,8 +1391,7 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       업태
                     </Text>
                     {/* <Text
@@ -1429,8 +1406,7 @@ const CBStoreInfoSetting = props => {
                       ...BaseStyle.round05,
                       ...BaseStyle.ph10,
                       height: 50,
-                    }}
-                  >
+                    }}>
                     <TextInput
                       placeholder="업태를 입력해주세요."
                       value={info.mb_eobtae}
@@ -1455,8 +1431,7 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       업종
                     </Text>
                     {/* <Text
@@ -1471,8 +1446,7 @@ const CBStoreInfoSetting = props => {
                       ...BaseStyle.round05,
                       ...BaseStyle.ph10,
                       height: 50,
-                    }}
-                  >
+                    }}>
                     <TextInput
                       placeholder="업종을 입력해주세요."
                       value={info.mb_jongmog}
@@ -1497,8 +1471,7 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       추천인코드
                     </Text>
                     {/* <Text
@@ -1513,8 +1486,7 @@ const CBStoreInfoSetting = props => {
                       ...BaseStyle.round05,
                       ...BaseStyle.ph10,
                       height: 50,
-                    }}
-                  >
+                    }}>
                     <TextInput
                       placeholder="추천인코드를 입력해주세요."
                       value={info.mb_recommender}
@@ -1528,7 +1500,8 @@ const CBStoreInfoSetting = props => {
                         marginTop: 10,
                       }}
                       autoCapitalize="none"
-                      editable={disable} selectTextOnFocus={disable}
+                      editable={disable}
+                      selectTextOnFocus={disable}
                     />
                   </View>
                 </View>
@@ -1536,9 +1509,9 @@ const CBStoreInfoSetting = props => {
                   style={{
                     borderWidth: 0,
                     height: 30,
-                  }}
-                >
-                  <Text style={{...BaseStyle.ko12, lineHeight:16, color: '#aaa'}}>
+                  }}>
+                  <Text
+                    style={{...BaseStyle.ko12, lineHeight: 16, color: '#aaa'}}>
                     ※ 추천인코드는 한 번 입력한 이후에는 수정은 불가능합니다.
                   </Text>
                 </View>
@@ -1549,23 +1522,20 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       매장 카테고리
                     </Text>
                     <Text
-                      style={{...BaseStyle.ko12, color: Primary.PointColor02}}
-                    >
+                      style={{...BaseStyle.ko12, color: Primary.PointColor02}}>
                       ※
                     </Text>
                     <Text
                       style={{
                         ...BaseStyle.ko12,
                         color: '#aaa',
-                        lineHeight:16,
+                        lineHeight: 16,
                         ...BaseStyle.mb3,
-                      }}
-                    >
+                      }}>
                       (카테고리는 최대 2개 설정가능합니다.)
                     </Text>
                   </View>
@@ -1585,8 +1555,7 @@ const CBStoreInfoSetting = props => {
                         ...BaseStyle.ko15,
                         ...BaseStyle.font_bold,
                         ...BaseStyle.mr5,
-                      }}
-                    >
+                      }}>
                       연관 키워드
                     </Text>
 
@@ -1594,10 +1563,9 @@ const CBStoreInfoSetting = props => {
                       style={{
                         ...BaseStyle.ko12,
                         color: '#aaa',
-                        lineHeight:16,
+                        lineHeight: 16,
                         ...BaseStyle.mb3,
-                      }}
-                    >
+                      }}>
                       키워드를 입력하세요 (최대6개)
                     </Text>
                   </View>
@@ -1636,8 +1604,7 @@ const CBStoreInfoSetting = props => {
                   </View>
                   {/* line 2 */}
                   <View
-                    style={{flexDirection: 'row', height: 50, marginTop: 10}}
-                  >
+                    style={{flexDirection: 'row', height: 50, marginTop: 10}}>
                     <TextInput
                       value={keyword.thr}
                       onChangeText={str => {
@@ -1671,8 +1638,7 @@ const CBStoreInfoSetting = props => {
                   </View>
                   {/* line 3 */}
                   <View
-                    style={{flexDirection: 'row', height: 50, marginTop: 10}}
-                  >
+                    style={{flexDirection: 'row', height: 50, marginTop: 10}}>
                     <TextInput
                       value={keyword.fiv}
                       onChangeText={str => {
@@ -1718,14 +1684,12 @@ const CBStoreInfoSetting = props => {
                       alignSelf: 'flex-end',
                       marginTop: 10,
                       marginHorizontal: 10,
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         color: '#c7c7c7',
                         textDecorationLine: 'underline',
-                      }}
-                    >
+                      }}>
                       회원탈퇴
                     </Text>
                   </Pressable>
@@ -1741,8 +1705,7 @@ const CBStoreInfoSetting = props => {
                 width: layout.width,
                 height: layout.height,
                 position: 'absolute',
-              }}
-            >
+              }}>
               <Postcode
                 style={{flex: 1}}
                 jsOptions={{animation: true, hideMapBtn: true}}
@@ -1767,15 +1730,13 @@ const CBStoreInfoSetting = props => {
             <TouchableOpacity
               activeOpacity={1}
               onPress={onModifyStoreInfo}
-              style={{...BaseStyle.mainBtnBottom}}
-            >
+              style={{...BaseStyle.mainBtnBottom}}>
               <Text
                 style={{
                   ...BaseStyle.ko18,
                   ...BaseStyle.font_bold,
                   ...BaseStyle.font_white,
-                }}
-              >
+                }}>
                 수정하기
               </Text>
             </TouchableOpacity>
@@ -1783,9 +1744,13 @@ const CBStoreInfoSetting = props => {
             <TouchableOpacity
               activeOpacity={1}
               onPress={onSubmitStoreInfo}
-              style={{...BaseStyle.mainBtnBottom}}
-            >
-              <Text style={{...BaseStyle.ko18, ...BaseStyle.font_bold, ...BaseStyle.font_white,}}>
+              style={{...BaseStyle.mainBtnBottom}}>
+              <Text
+                style={{
+                  ...BaseStyle.ko18,
+                  ...BaseStyle.font_bold,
+                  ...BaseStyle.font_white,
+                }}>
                 등록하기
               </Text>
             </TouchableOpacity>

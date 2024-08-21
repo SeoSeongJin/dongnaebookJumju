@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   ScrollView,
   SafeAreaView,
   Platform,
-  Linking
+  Linking,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BaseStyle from '../styles/Base';
@@ -16,13 +16,13 @@ import {DrawerMenus, DrawerMenusCB} from '../data/drawerMenus';
 import cusToast from '../components/CusToast';
 import Divider from '../components/Divider';
 import {useSelector} from 'react-redux';
-import Api from "../Api";
+import Api from '../Api';
 
 const DrawerMenu = props => {
   const userInfo = useSelector(state => state.login);
   const {navigation} = props;
 
-  const [config, setConfig] = React.useState('')
+  const [config, setConfig] = React.useState('');
 
   // 로그아웃
   const onLogoutHandler = async () => {
@@ -34,7 +34,6 @@ const DrawerMenu = props => {
       cusToast(`로그아웃 중 에러가 발생하였습니다.\n오류:${err}`, 2500);
     }
   };
-
 
   /*
   Api.send('site_config', param,args => {
@@ -48,20 +47,21 @@ const DrawerMenu = props => {
 
   //광고문의 외부 URL
   const _configInfo = () => {
-    const data = {}
-    Api.send('site_config', data,args => {
+    const data = {};
+    Api.send('site_config', data, args => {
       const resultItem = args.resultItem;
       const arrItems = args.arrItems;
       if (resultItem.result === 'Y') {
         setConfig(arrItems);
       }
-    })
+    });
   };
 
   useEffect(() => {
     _configInfo();
   }, []);
 
+  console.log('DrawerMenus', DrawerMenus);
   return (
     <SafeAreaView>
       <View
